@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <string.h>
-
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -85,10 +83,11 @@ int useFuzzyPicker() {
 }
 
 int displayHelp() {
-    printf("======= Templari (beta) =======\n");
+    printf("\n======= Templari (beta) =======\n");
     printf("- templari: open template picker\n");
     printf("- templari -h: open help\n");
     printf("- templari <path>: create template from path\n");
+    printf("::templates location: %s\n\n", templariPath);
 
     return 0;
 }

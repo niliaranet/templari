@@ -1,5 +1,5 @@
 # Templari
-FZF wrapper for saving and organizing templates.
+FZF wrapper for managing templates.
 
 ## Usage
 ```bash
@@ -17,6 +17,8 @@ touch template/a template/b template/c
 templari template/ # turns the folder into a template
 templari # open it in the file picker to get the contents back
 ```
+
+The templates' saving location is `$HOME/.config/templari/`.
 
 ## Compiling
 ```bash
