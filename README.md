@@ -6,6 +6,7 @@ FZF wrapper for managing templates.
 templari -h # display help
 
 templari # open template picker
+templari remove # open picker to remove template
 templari <directory/file> # create new template from the specified directory/file
 ```
 

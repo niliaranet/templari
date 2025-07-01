@@ -7,13 +7,16 @@
 char *templariPath;
 
 char *getTemplariPath();
-int useFuzzyPicker();
+int openTemplate();
+char *useFuzzyPicker();
 int displayHelp();
 int getPathState(char *path);
 int createTemplate(char *path);
+int removeTemplate();
 
 void removeTrailingNewLine(char *input);
 void removeTrailingSlash(char *input);
+
 
 
 int main(int argc, char *argv[]) {
@@ -23,12 +26,14 @@ int main(int argc, char *argv[]) {
     }
 
     if (argc == 1)
-        return useFuzzyPicker();
+        return openTemplate();
     if (argc < 2)
         return 1;
 
     if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
         return displayHelp();
+    if (!strcmp(argv[1], "remove"))
+        return removeTemplate();
 
     return createTemplate(argv[1]);
 }
@@ -46,9 +51,35 @@ char *getTemplariPath() {
     return path;
 }
 
-int useFuzzyPicker() {
+int openTemplate() {
+    char *path = useFuzzyPicker();
+    if (strcmp(path, "") == 0)
+        return 1;
+
+    char command[1024];
+    sprintf(command, "cp -r \"%s\"/* ./", path);
+    printf("%s\n", command);
+    system(command);
+
+    return 0;
+}
+
+int removeTemplate() {
+    char *path = useFuzzyPicker();
+    if (strcmp(path, "") == 0)
+        return 1;
+
+    char command[1024];
+    sprintf(command, "rm -rf \"%s\"", path);
+    printf("%s\n", command);
+    system(command);
+
+    return 0;
+}
+
+char *useFuzzyPicker() {
     FILE *fp;
-    char path[1024] = "";
+    char *path = malloc(sizeof(char) * 1024);
     char fzfCommand[200];
 
     sprintf(
@@ -61,25 +92,18 @@ int useFuzzyPicker() {
     fp = popen(fzfCommand, "r");
     if (fp == NULL) {
         printf("Failed to run command\n" );
-        return 1;
+        return "";
     }
 
-    while (fgets(path, sizeof(path), fp) != NULL) {
-        printf("found %s", path);
+    while (fgets(path, 1024 * sizeof(char), fp) != NULL) {
     }
 
     pclose(fp);
 
-    if (!strcmp(path,""))
-        return 1;
-
-    char command[1024];
     removeTrailingNewLine(path);
     removeTrailingSlash(path);
-    sprintf(command, "cp -r %s/* ./", path);
-    system(command);
 
-    return 0;
+    return path;
 }
 
 int displayHelp() {
@@ -128,7 +152,7 @@ int createTemplate(char *path) {
     else
         sprintf(command, "cp -r \"%s\" %s/\"%s\"/", path, templariPath, templateName);
 
-    printf("running %s\n", command);
+    printf("%s\n", command);
     system(command);
 
     /* remove .git */
